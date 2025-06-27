@@ -1,4 +1,5 @@
-<settings><servers>
+<settings>
+<servers>
   <server>
     <id>nextwork-nextwork-devops-cicd</id>
     <username>aws</username>
