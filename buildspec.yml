@@ -4,20 +4,23 @@ phases:
   install:
     runtime-versions:
       java: corretto8
+    commands:
+      - export PATH="/usr/share/maven/bin:$PATH"
+      - mvn --version || (apt-get update && apt-get install -y maven)
+
   pre_build:
     commands:
-      - echo Logging in to AWS CodeArtifact...
-      - CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain nextwork --domain-owner 390402566312 --region us-east-1 --query authorizationToken --output text`
+      - CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain nextwork --domain-owner 390402566312 --region us-east-1 --query authorizationToken --output text)
       - export CODEARTIFACT_AUTH_TOKEN
+
   build:
     commands:
-      - echo Build started on `date`
       - mvn clean install -s settings.xml
+
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Packaging artifacts...
       - mvn package -s settings.xml
+
 artifacts:
   files:
     - target/*.war
